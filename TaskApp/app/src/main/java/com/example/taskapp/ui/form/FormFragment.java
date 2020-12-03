@@ -10,12 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.example.taskapp.MainActivity;
 import com.example.taskapp.R;
 
 
-
 public class FormFragment extends Fragment {
+    private EditText editText;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,16 +28,26 @@ public class FormFragment extends Fragment {
 
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        editText = view.findViewById(R.id.edit_text);
         view.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
-            private static final String CLICKED = "ololo";
-
             @Override
             public void onClick(View v) {
-                Log.d(CLICKED, "onClick: button clicked");
+                save();
             }
         });
+    }
+
+
+
+    private void save() {
+        String text = editText.getText().toString();
+        Bundle bundle = new Bundle();
+        bundle.putString("text",text);
+        getParentFragmentManager().setFragmentResult("rk_task",bundle);
+        ((MainActivity) requireActivity()).closerFragment();
     }
 }
