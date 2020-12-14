@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,16 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.taskapp.MainActivity;
 import com.example.taskapp.R;
+import com.example.taskapp.interfaces.CloseFragment;
+import com.example.taskapp.utils.Prefs;
 
 import java.util.ArrayList;
 
 
-public class BoardAdapter  extends RecyclerView.Adapter<BoardAdapter.ViewHolder>{
+public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
 
     private ArrayList<String> titleList = new ArrayList<>();
     private ArrayList<String> txtDescription = new ArrayList<>();
     private ArrayList<Integer> imageList = new ArrayList<>();
+    private CloseFragment closeFragment;
 
     public BoardAdapter() {
 
@@ -53,7 +58,7 @@ public class BoardAdapter  extends RecyclerView.Adapter<BoardAdapter.ViewHolder>
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.board_pager_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.board_pager_list, parent, false);
         return new ViewHolder(view);
     }
 
@@ -67,17 +72,24 @@ public class BoardAdapter  extends RecyclerView.Adapter<BoardAdapter.ViewHolder>
         return titleList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public void setClickListener(CloseFragment closeFragment) {
+        this.closeFragment = closeFragment;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textTitle;
         private TextView textDesc;
         private ImageView imageBoard;
+        private Button btnGetIn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.text_title);
             textDesc = itemView.findViewById(R.id.text_description);
             imageBoard = itemView.findViewById(R.id.imageView);
+            btnGetIn = itemView.findViewById(R.id.btnGetInViewPager);
+
         }
 
         public void bind(int position) {
@@ -87,6 +99,21 @@ public class BoardAdapter  extends RecyclerView.Adapter<BoardAdapter.ViewHolder>
                     .load(imageList.get(position))
                     .apply(RequestOptions.centerCropTransform())
                     .into(imageBoard);
+            if (position == 2)
+                btnGetIn.setVisibility(View.VISIBLE);
+            else btnGetIn.setVisibility(View.GONE);
+            clickListener();
+
+        }
+
+        private void clickListener() {
+            btnGetIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    closeFragment.toCloseFragment();
+
+                }
+            });
         }
     }
 }

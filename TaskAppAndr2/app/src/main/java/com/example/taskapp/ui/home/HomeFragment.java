@@ -1,23 +1,26 @@
 package com.example.taskapp.ui.home;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.taskapp.MainActivity;
 import com.example.taskapp.R;
+import com.example.taskapp.interfaces.OnItemClickListener;
 
 import java.util.ArrayList;
 
@@ -26,12 +29,16 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private String text;
+    private ArrayList<String> list;
+
+    private int positionEdited;
+    private boolean isEditing = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskAdapter = new TaskAdapter();
-        ArrayList<String> list = new ArrayList<>();
+        list = new ArrayList<>();
         list.add("Omurzak");
         list.add("Mahabat");
         list.add("Nazar");
@@ -39,8 +46,6 @@ public class HomeFragment extends Fragment {
         list.add("Ermik");
         list.add("Daniar");
         taskAdapter.addList(list);
-
-
 
     }
 
@@ -59,6 +64,7 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.fab).setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             navController.navigate(R.id.action_navigation_home_to_formFragment);
+//            Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_formFragment); shortcut
         });
         setFragmentListener();
     }
@@ -67,9 +73,15 @@ public class HomeFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                text = result.getString("text");
-                taskAdapter.addItem(text);
-
+                if (!isEditing) {
+                    text = result.getString("text");
+                    taskAdapter.addItem(text);
+                }else {
+                    //**************************
+                    text = result.getString("text");
+                    taskAdapter.setElement(positionEdited, text);
+                    isEditing = false;
+                }
             }
         });
     }
@@ -77,6 +89,32 @@ public class HomeFragment extends Fragment {
     private void initView() {
         recyclerView.setAdapter(taskAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL));
+        taskAdapter.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                positionEdited = position;
 
+                Bundle bundle = new Bundle();
+                bundle.putString("edit",list.get(position));
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_formFragment,bundle);
+                isEditing = true;
+
+
+            }
+
+            @Override
+            public void onLongClick(int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
+                        .setView(R.layout.alert_dialog_view)
+                        .setPositiveButton("Yes", (dialog, which) -> taskAdapter.deleteElement(position))
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {   //!!!keep deference 🛑
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(requireContext(), "You are back" + which, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                builder.create().show();
+            }
+        });
     }
 }
