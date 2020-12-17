@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="activeColorDotBlue">#085DB3</color>
     <color name="inActiveColorDotGray">#9C9898</color>
+    <color name="colorBackgroundElement_grey">#C5BFBF</color>
+    <color name="colorBackgroundElement_blueShade">#d3cae3</color>
+
 </resources>

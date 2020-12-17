@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void clearAll() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Are sure you want to clear all data ?")
+                .setTitle("Are you sure  want to clear all data ?")
                 .setView(R.layout.alert_dialog_view)
                 .setMessage("clearing all data may not be retrieved")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

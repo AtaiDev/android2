@@ -13,14 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.taskapp.App;
 import com.example.taskapp.MainActivity;
+import com.example.taskapp.models.Note;
 import com.example.taskapp.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 
 public class FormFragment extends Fragment {
+    private EditText editText;
+    private Note noteToEdit;
+    private String timing;
 
-    EditText editText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,28 +38,54 @@ public class FormFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-         editText = view.findViewById(R.id.edit_text);
+        editText = view.findViewById(R.id.edit_text);
         retrieveBundle();
         view.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
-            private static final String CLICKED = "ololo";
+
             @Override
             public void onClick(View v) {
                 save();
             }
+
             private void save() {
-                    String text = editText.getText().toString();
-                    Log.e("FormFragment", "onClick: button clicked" + text);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("text", text);
-                    getParentFragmentManager().setFragmentResult("rk_task", bundle);
-                    ((MainActivity) requireActivity()).closeFragment();
+                String text = editText.getText().toString();
+                Log.e("FormFragment", "onClick: button clicked" + text);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm yyyy/MM/dd", Locale.ROOT);
+                String dateString = dateFormat.format(System.currentTimeMillis());
+                //String dateSt = DateFormat.getDateInstance().format(System.currentTimeMillis());<---Dec 16, 2020 in this format;
+                // to use in both cases
+                Note note;
+                if (noteToEdit!= null) {
+                    note = new Note(text, timing);
+                    App.getDataBase().noteDao().updateItem(note);
+                } else {
+                    note = new Note(text, dateString);
+                    App.getDataBase().noteDao().insert(note);
+                }
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("note", note);
+                getParentFragmentManager().setFragmentResult("rk_task", bundle);
+                ((MainActivity) requireActivity()).closeFragment();
+
+
             }
         });
 
     }
 
     private void retrieveBundle() {
-        editText.setText(getArguments().getString("edit"));
-        Log.e("ololo", "retrieveBundle: "+getArguments().getString("edit"));
+        getParentFragmentManager().setFragmentResultListener("key_edit", getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                if (result != null) {
+                    noteToEdit = (Note) result.getSerializable("edit");
+                    editText.setText(noteToEdit.getTitle());
+                    timing = noteToEdit.getCreatedAt();
+                    Log.e("ololo", "onFragmentResult: "+ noteToEdit.getTitle() + " " + timing );
+
+                }
+            }
+        });
+
     }
 }

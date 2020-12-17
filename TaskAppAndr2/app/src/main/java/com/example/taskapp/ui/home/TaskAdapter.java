@@ -8,15 +8,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.taskapp.models.Note;
 import com.example.taskapp.R;
 import com.example.taskapp.interfaces.OnItemClickListener;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
-    private ArrayList<String> list = new ArrayList<>();
+    private ArrayList<Note> list = new ArrayList<>();
     private OnItemClickListener itemClickListener;
+    private int pos;
 
     public TaskAdapter() {
 
@@ -31,6 +34,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        this.pos = position;
         holder.bind(list.get(position));
     }
 
@@ -43,13 +47,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
-    public void addList(ArrayList<String> list) {
+    public void addList(List<Note> list) {
         this.list.addAll(list);
         notifyDataSetChanged();
     }
 
-    public void addItem(String text) {
-        list.add(0, text);
+    public void addItem(Note note) {
+        list.add(0, note);
         notifyDataSetChanged();
     }
 
@@ -58,18 +62,26 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         notifyItemRemoved(position);
     }
 
-    public void setElement(int pos, String text) {
-        list.set(pos, text);
-        notifyDataSetChanged();
-
+    public void updateItem(int position, Note note) {
+        list.set(position, note);
+        notifyItemChanged(position);
     }
+
+//    public void setElement(int pos, String text) {
+//        list.set(pos, text);
+//        notifyDataSetChanged();
+//
+//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
+        private TextView timeView;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textView);
+            timeView = itemView.findViewById(R.id.timeView);
             clickListeners();
         }
 
@@ -77,20 +89,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListener.onItemClick(getAdapterPosition());
+                    itemClickListener.onItemClick(getAdapterPosition(), list.get(getAdapterPosition()));
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    itemClickListener.onLongClick(getAdapterPosition());
+                    itemClickListener.onLongClick(getAdapterPosition(), list.get(getAdapterPosition()));
                     return true;
                 }
             });
         }
 
-        public void bind(String s) {
-            textView.setText(s);
+        public void bind(Note s) {
+            textView.setText(s.getTitle());
+            timeView.setText(s.getCreatedAt());
+            if (pos % 2 == 0)
+                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorBackgroundElement_grey));
+            else
+                itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorBackgroundElement_blueShade));
         }
     }
 }

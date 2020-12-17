@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/formFragment"
         android:name="com.example.taskapp.ui.form.FormFragment"
-        android:label="fragment_form"
+        android:label="Form"
         tools:layout="@layout/fragment_form" >
         <argument
             android:name="arguments"
