@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -29,6 +30,8 @@ android {
 }
 
 dependencies {
+    //firebase bom
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
@@ -41,15 +44,20 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation "androidx.fragment:fragment:1.3.0-beta02"
-
+    implementation "androidx.fragment:fragment:1.3.0-rc01"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     // for indicator dots
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
-
     // all for room down here
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
-
+    //reCapchar
+    implementation 'androidx.browser:browser:1.3.0'
+    //firebase
+    implementation 'com.google.firebase:firebase-auth:20.0.1'
+    // firestore
+    implementation 'com.google.firebase:firebase-firestore'
+    // firestore UI
+    implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
 
 }

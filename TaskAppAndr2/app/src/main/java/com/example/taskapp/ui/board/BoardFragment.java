@@ -29,7 +29,6 @@ import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 public class BoardFragment extends Fragment {
 
-
     private ViewPager2 viewPager;
     //    private LinearLayout boardingIndicator;
     private BoardAdapter adapter;

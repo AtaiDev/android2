@@ -8,17 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 
-public class CustomTextView extends AppCompatEditText {
+public class CustomTextViewToLearn extends AppCompatEditText {
     float paddingLeft = -1;
-    public CustomTextView(@NonNull Context context) {
+    public CustomTextViewToLearn(@NonNull Context context) {
         super(context);
     }
 
-    public CustomTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CustomTextViewToLearn(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CustomTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CustomTextViewToLearn(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -30,7 +30,7 @@ public class CustomTextView extends AppCompatEditText {
         calculate();
     }
 
-        /*padding left was given manually "prefix" was assined as tag
+        /*padding left was given manually "prefix" was assigned as tag
         * widths prefix each latter
         * and getPaint its for the special for the text to paint the view
         * via forech we adding width to the variable textWidth by+=

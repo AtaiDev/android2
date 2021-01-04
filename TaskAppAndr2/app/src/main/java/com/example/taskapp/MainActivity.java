@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.taskapp.utils.Prefs;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import androidx.annotation.NonNull;
@@ -31,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initNavigation();
         boolean isShown = new Prefs(this).isShown();
-        if (!isShown) navController.navigate(R.id.boardFragment);
-
+        if (!isShown){navController.navigate(R.id.boardFragment);}
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            navController.navigate(R.id.phoneFragment);
+        }
     }
 
     @Override
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     private void exitApp() {

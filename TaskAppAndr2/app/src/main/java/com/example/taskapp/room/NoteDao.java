@@ -27,8 +27,12 @@ public interface NoteDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateItem(Note note);
 
-    @Query("UPDATE note SET title = title ")
-    void updateList(List<Note> notes);
 
+    @Query("UPDATE note SET title =:cTitle")
+    void updateList(String cTitle);
+
+
+    @Query(("UPDATE note SET title =:cTitle WHERE id =:tId"))
+    void updateById(int tId,String cTitle);
 
 }

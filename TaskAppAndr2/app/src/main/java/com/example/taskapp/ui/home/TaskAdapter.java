@@ -66,6 +66,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         list.set(position, note);
         notifyItemChanged(position);
     }
+// returns the element or object in clicked position;
+    //which we called inside the click method to pass into the DAO methods;
+    public Note getItem(int position) {
+        if (position == list.size()) return list.get(position - 1);
+        else return list.get(position);
+    }
 
 //    public void setElement(int pos, String text) {
 //        list.set(pos, text);
@@ -80,7 +86,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textView);
+            textView = itemView.findViewById(R.id.textViewTask);
             timeView = itemView.findViewById(R.id.timeView);
             clickListeners();
         }
@@ -89,13 +95,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListener.onItemClick(getAdapterPosition(), list.get(getAdapterPosition()));
+                    itemClickListener.onItemClick(getAdapterPosition());
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    itemClickListener.onLongClick(getAdapterPosition(), list.get(getAdapterPosition()));
+                    itemClickListener.onLongClick(getAdapterPosition());
                     return true;
                 }
             });

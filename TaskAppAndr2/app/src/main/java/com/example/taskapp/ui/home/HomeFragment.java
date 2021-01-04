@@ -21,18 +21,20 @@ import com.example.taskapp.App;
 import com.example.taskapp.models.Note;
 import com.example.taskapp.R;
 import com.example.taskapp.interfaces.OnItemClickListener;
+import com.example.taskapp.ui.dashboard.DashboardFragment;
 
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+    public static final String EDIT_KEY = "edit_key";
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private Note note;
     private List<Note> list;
 
 
-    private boolean isEditing = false;
+    private boolean isEditing = false;// helps to figure out to detect if we are going to add or edit
     private int posEdited;
 
     @Override
@@ -41,7 +43,6 @@ public class HomeFragment extends Fragment {
         taskAdapter = new TaskAdapter();
         list = App.getDataBase().noteDao().getAll();
         taskAdapter.addList(list);
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,17 +57,13 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
         initView();
-        setFragmentListener();
+        setFragmentListener(view);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
-    private void setFragmentListener() {
+    private void setFragmentListener(View view) {
         // btn fub operation to second form fragment
-        getView().findViewById(R.id.fab).setOnClickListener(v -> {
+        view.findViewById(R.id.fab).setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             navController.navigate(R.id.action_navigation_home_to_formFragment);
             isEditing = false;
@@ -92,22 +89,25 @@ public class HomeFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL));
         taskAdapter.setItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position, Note note) {
+            public void onItemClick(int position) {
                 posEdited = position;
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("edit", note);
-                getParentFragmentManager().setFragmentResult("key_edit", bundle);
-                Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_formFragment);
+                bundle.putSerializable(EDIT_KEY, taskAdapter.getItem(position));
+//           another way of sending bundle into another fragment;
+//           you have to handle this in the next fragment with
+//           getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), new FragmentResultListener() {
+//             getParentFragmentManager().setFragmentResult("key_edit", bundle); <----- this one sends sets the bundle into result;
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_formFragment,bundle);
                 isEditing = true;
             }
             @Override
-            public void onLongClick(int position, Note notDelete) {
+            public void onLongClick(int position) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
                         .setView(R.layout.alert_dialog_view)
                         .setPositiveButton("Yes", (dialog, which) -> {
-
                             taskAdapter.deleteElement(position);
-                            App.getDataBase().noteDao().delete(notDelete);
+                            App.getDataBase().noteDao().delete(taskAdapter.getItem(position));
+
 
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {   //!!!keep deference 🛑

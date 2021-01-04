@@ -21,7 +21,7 @@ import com.example.taskapp.R;
 import com.example.taskapp.ui.auth.PhoneFragment;
 
 
-public class CustomViewDialog extends AppCompatDialogFragment implements TextWatcher{
+public class LearnDialogCustomView extends AppCompatDialogFragment implements TextWatcher{
     private EditText otpTextOne, otpTextTwo, otpTextThree, otpTextFore;
     private TextView countDownText;
     private CountDownTimer countDownTimer;
@@ -34,8 +34,8 @@ public class CustomViewDialog extends AppCompatDialogFragment implements TextWat
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_dailog_view, null);
-        builder.setView(R.layout.custom_dailog_view)
+        View view = inflater.inflate(R.layout.learn_to_display_otp_custom_dailog_view, null);
+        builder.setView(R.layout.learn_to_display_otp_custom_dailog_view)
                 .setPositiveButton("Verify", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -87,7 +87,7 @@ public class CustomViewDialog extends AppCompatDialogFragment implements TextWat
             @Override
             public void onFinish() {
                 dismiss();
-                PhoneFragment.errorPhone.setVisibility(View.VISIBLE);
+//                PhoneFragment.errorPhone.setVisibility(View.VISIBLE);
 
             }
         }.start();

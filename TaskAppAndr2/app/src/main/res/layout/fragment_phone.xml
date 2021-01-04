@@ -1,14 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".ui.auth.PhoneFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/viewPhone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <com.example.taskapp.customizedOnes.CustomTextViewToLearn
+            android:id="@+id/editPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:inputType="phone"
+            android:tag="+996" />
+
+        <TextView
+            android:id="@+id/txtInput_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/incase_error_phone_number"
+            android:textColor="#B61010"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            />
+
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="carry on"
+            android:layout_marginTop="80dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+        <LinearLayout
+            android:id="@+id/linerEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            >
+
+            <EditText
+                android:id="@+id/otp_edit_first"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="1"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                android:nextFocusRight="@id/otp_edit_second"
+                >
+
+                <requestFocus/>
+            </EditText>
+            <EditText
+                android:id="@+id/otp_edit_second"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="1"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                />
+            <EditText
+                android:id="@+id/otp_edit_third"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="1"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                />
+            <EditText
+                android:id="@+id/otp_edit_four"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:maxLength="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                />
+
+            <EditText
+                android:id="@+id/otp_edit_fives"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="1"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                />
+
+            <EditText
+                android:id="@+id/otp_edit_six"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="1"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:inputType="number"
+                />
+
+<!--            <EditText-->
+<!--                android:id="@+id/edit_code_otp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:maxLength="6"/>-->
+<!--                <requestFocus/>-->
+<!--                />-->
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/textTimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="textTimer"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+             />
+
+        <Button
+            android:id="@+id/btnCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="confirm"
+            android:layout_marginTop="40dp"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

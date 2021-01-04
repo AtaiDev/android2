@@ -8,4 +8,5 @@
     <string name="profile">Profile</string>
     <string name="skipBtn">skip</string>
     <string name="get_inBtn">get in</string>
+    <string name="incase_error_phone_number">Please make sure you type correct phone number!</string>
 </resources>

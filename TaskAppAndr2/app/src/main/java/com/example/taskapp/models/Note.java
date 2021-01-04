@@ -3,6 +3,8 @@ package com.example.taskapp.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 
 @Entity
@@ -11,6 +13,8 @@ public class Note implements Serializable {
     private long id;
     private String title;
     private String createdAt;
+    private @Exclude String documentId;
+
 
     public Note() {
     }
@@ -18,6 +22,14 @@ public class Note implements Serializable {
     public Note(String title, String createdAt) {
         this.title = title;
         this.createdAt = createdAt;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
+    public String getDocumentId() {
+        return documentId;
     }
 
     public long getId() {

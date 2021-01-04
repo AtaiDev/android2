@@ -57,4 +57,12 @@
             android:id="@+id/action_boardFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
+
+    <fragment
+        android:id="@+id/phoneFragment"
+        android:name="com.example.taskapp.ui.auth.PhoneFragment"
+        android:label="fragment_board"
+        tools:layout="@layout/fragment_board" />
+
+
 </navigation>
