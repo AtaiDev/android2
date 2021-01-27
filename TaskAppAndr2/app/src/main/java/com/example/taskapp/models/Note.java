@@ -1,19 +1,22 @@
 package com.example.taskapp.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.firestore.Exclude;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 @Entity
 public class Note implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @NonNull
+    @PrimaryKey()
+    private String id;
     private String title;
     private String createdAt;
-    private @Exclude String documentId;
 
 
     public Note() {
@@ -24,19 +27,11 @@ public class Note implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
-    }
-
-    public String getDocumentId() {
-        return documentId;
-    }
-
-    public long getId() {
+    @NotNull
+    public String getId() {
         return id;
     }
-
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

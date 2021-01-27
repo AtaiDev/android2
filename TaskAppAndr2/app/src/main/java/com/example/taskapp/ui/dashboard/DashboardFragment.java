@@ -1,7 +1,8 @@
 package com.example.taskapp.ui.dashboard;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,32 +13,40 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taskapp.R;
+import com.example.taskapp.interfaces.OnItemClickListener;
 import com.example.taskapp.models.Note;
 
+import com.example.taskapp.ui.home.TaskAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 
 import com.firebase.ui.firestore.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DashboardFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
+    public static final String KEY_STORED = "updateFromFirestore";
 
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -45,6 +54,8 @@ public class DashboardFragment extends Fragment {
     private NoteAdapterDashboard adapterDashboard;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private TaskAdapter taskAdapter;//for the second way of retrieving data;
+    private List<Note> list = new ArrayList<>();
 
 
     @Nullable
@@ -56,21 +67,21 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        timerProgress();
-        setUpRecycler(view);
+        //just to keep the same adapter to retrieve the data(second way of getting data);👇
 
+        initRecyProgress();
+        //setUpRecycler(view); this one with snapshot, live listener
+        /*second way of the getting data from firestore👇*/
+        initView();
+        loadData();
     }
 
-    private void timerProgress() {
-        final Handler mHandler = new Handler();
-        Runnable mRunnable = () -> {
-            progressBar = getView().findViewById(R.id.progress_bar);
-            progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        };
-        mHandler.postDelayed(mRunnable, 1500);
 
-        /*just to know that we can achieve in this way too*/
+    private void initRecyProgress() {
+        recyclerView = getView().findViewById(R.id.recyclerDashBoard);
+        progressBar = getView().findViewById(R.id.progress_bar);
+
+        /*not a best way but just kept to knew this way, might help ones anyway*/
 //       timer = new Timer();
 //        recyclerView = view.findViewById(R.id.recyclerDashBoard);
 //        progressBar = view.findViewById(R.id.progress_bar);
@@ -89,6 +100,7 @@ public class DashboardFragment extends Fragment {
 
     }
 
+    /*below from this all the way down till the note for the first way of getting the data from firestore 🛑🛑🛑🛑🛑🛑🛑  */
     private void setUpRecycler(View view) {
         recyclerView = view.findViewById(R.id.recyclerDashBoard);
         Query query = notebook.orderBy("createdAt", Query.Direction.DESCENDING);
@@ -100,7 +112,7 @@ public class DashboardFragment extends Fragment {
                     @Override
                     public Note parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Note note = snapshot.toObject(Note.class);
-                        note.setDocumentId(snapshot.getId());
+                        note.setId(snapshot.getId());
                         return note;
                     }
                 })
@@ -130,6 +142,7 @@ public class DashboardFragment extends Fragment {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getActivity(), "Element has been removed", Toast.LENGTH_SHORT).show();
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -141,14 +154,13 @@ public class DashboardFragment extends Fragment {
                         });
             }
         }).attachToRecyclerView(recyclerView);
-
         adapterDashboard.notifyDataSetChanged();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapterDashboard.startListening();
+//        adapterDashboard.startListening();
 
         /*down below for the auto listening for the changes without recycler if we assigning  straight  to the editText*/
 //        notebook.addSnapshotListener(requireActivity(), new EventListener<QuerySnapshot>() {
@@ -172,7 +184,84 @@ public class DashboardFragment extends Fragment {
     public void onStop() {
         super.onStop();
         Log.e(TAG, "onStop: stopListening was called");
-        adapterDashboard.stopListening();
+//        adapterDashboard.stopListening();
     }
+
+
+    /*Below from this all for  getting a data from firestore in a second way 📕📕📕📕*/
+    private void initView() {
+        taskAdapter = new TaskAdapter();
+        recyclerView.setAdapter(taskAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL));
+        taskAdapter.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(KEY_STORED, list.get(position));
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_formFragment, bundle);
+                taskAdapter.clearList(list);
+            }
+
+            @Override
+            public void onLongClick(int position) {
+                if (!list.isEmpty()) {
+                    String id = list.get(position).getId();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(requireContext())
+                            .setTitle("Are you sure to delete?")
+                            .setMessage("Deleted item won't be retrieved!")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    db.collection("noteBook")
+                                            .document(id)
+                                            .delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        taskAdapter.deleteElement(position);
+                                                        progressBar.setVisibility(View.GONE);
+                                                        Toast.makeText(requireContext(), "Has been deleted", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(requireContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(requireContext(), "You're back to business!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    alert.create().show();
+                }
+            }
+        });
+    }
+
+    /*loads the data from the firebase firestore and will show the progress bar till addOnComplete is successful*/
+    private void loadData() {
+        db.collection("noteBook")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+
+                                for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                                    String documentId = snapshot.getId();
+                                    list.add(snapshot.toObject(Note.class));
+
+                            }
+//                            List<Note> list = task.getResult().toObjects(Note.class);
+                            taskAdapter.addList(list);
+                        }
+                    }
+                });
+    }
+
 
 }

@@ -9,15 +9,16 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="276dp"
+            android:layout_height="45dp"
             android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
             android:layout_marginEnd="20dp"
             android:layout_toStartOf="@+id/timeView"
             android:gravity="start"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewTask"
@@ -32,11 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:fontFamily="monospace"
             android:gravity="right"
-            android:textSize="10dp"
-            android:layout_centerVertical="true"
-            android:text="time created" />
+            android:text="time created"
+            android:textSize="10dp" />
 
     </RelativeLayout>
 

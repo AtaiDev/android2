@@ -21,7 +21,7 @@ import com.example.taskapp.App;
 import com.example.taskapp.models.Note;
 import com.example.taskapp.R;
 import com.example.taskapp.interfaces.OnItemClickListener;
-import com.example.taskapp.ui.dashboard.DashboardFragment;
+
 
 import java.util.List;
 
@@ -105,10 +105,8 @@ public class HomeFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
                         .setView(R.layout.alert_dialog_view)
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            taskAdapter.deleteElement(position);
                             App.getDataBase().noteDao().delete(taskAdapter.getItem(position));
-
-
+                            taskAdapter.deleteElement(position);
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {   //!!!keep deference 🛑
                             @Override

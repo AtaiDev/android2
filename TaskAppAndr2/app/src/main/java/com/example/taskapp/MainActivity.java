@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.phoneFragment);
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_menu, menu);
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 /*hiding the tool bar by checking it for null to avoid */
                 if (getSupportActionBar() != null) {
-                    if (destination.getId() == R.id.boardFragment)
+                    if (destination.getId() == R.id.boardFragment || destination.getId() == R.id.phoneFragment)
                         getSupportActionBar().hide();
                     else getSupportActionBar().show();
                 }
@@ -129,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();

@@ -34,7 +34,6 @@ public class NoteAdapterDashboard extends FirestoreRecyclerAdapter<Note, NoteAda
         return new NoteViewHolder(view);
     }
 
-
     static class NoteViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textNote;
@@ -47,7 +46,7 @@ public class NoteAdapterDashboard extends FirestoreRecyclerAdapter<Note, NoteAda
         }
 
         public void onBind(Note model,int position) {
-            itemView.setTag(model.getDocumentId());
+            itemView.setTag(model.getId());
             textTime.setText(model.getCreatedAt());
             textNote.setText(model.getTitle());
             if (position%2 == 0) itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorBackgroundElement_blueShade));

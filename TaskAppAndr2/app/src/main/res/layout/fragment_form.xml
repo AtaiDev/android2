@@ -1,35 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".ui.form.FormFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <RelativeLayout
+        android:id="@+id/hide_on_loading"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="type your task"
-        app:endIconMode="clear_text"
-        >
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_text"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="type your task"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:drawableRight="@drawable/ic_run_directions"
+            android:text="save" />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_form"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableRight="@drawable/ic_run_directions"
-        android:layout_marginTop="15dp"
-        android:text="save" />
-
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:progress="70"
+        android:visibility="gone" />
 
 </LinearLayout>

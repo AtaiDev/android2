@@ -1,5 +1,6 @@
 package com.example.taskapp.ui.home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+    private static final String TAG = "getItem";
     private ArrayList<Note> list = new ArrayList<>();
     private OnItemClickListener itemClickListener;
     private int pos;
@@ -66,12 +68,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         list.set(position, note);
         notifyItemChanged(position);
     }
-// returns the element or object in clicked position;
-    //which we called inside the click method to pass into the DAO methods;
+
+    // returns the element or object in clicked position;
+//    which we called inside the click method to pass into the DAO methods;
     public Note getItem(int position) {
-        if (position == list.size()) return list.get(position - 1);
-        else return list.get(position);
+        Log.e(TAG, "getItem: " + position);
+        return list.get(position);
     }
+
+    public void clearList(List<Note> list) {
+        list.clear();
+        notifyDataSetChanged();
+    }
+
 
 //    public void setElement(int pos, String text) {
 //        list.set(pos, text);
@@ -108,6 +117,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
 
         public void bind(Note s) {
+            s.setId(s.getId());
             textView.setText(s.getTitle());
             timeView.setText(s.getCreatedAt());
             if (pos % 2 == 0)
